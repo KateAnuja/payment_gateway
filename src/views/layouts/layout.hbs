@@ -1,0 +1,85 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="{{description}}">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <link rel="manifest" href="/manifest">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="msapplication-starturl" content="/">
+
+
+    <title>{{title}}</title>
+
+    <link rel="stylesheet" data-href="/css/bootstrap.min.css">
+    
+    <script type="text/javascript">
+        {{#if isDev}}
+            let __ENVIRONMENT="dev"; 
+        {{else}}
+            let __ENVIRONMENT="prod"; 
+        {{/if}}
+        var __fnArr=[];
+        function onLoad(f){
+            (typeof f === "function") ? __fnArr.push(f) : '';
+        }
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('/js/sw.js')
+                    .then(reg => {
+                    })
+                    .catch(err => {
+                        console.log('😥 Service worker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
+
+    
+
+  </head>
+  <body>
+      
+    <div id="preloader" style="text-align: center;padding:100px;">
+        <img src="/img/anim.gif"/>
+    </div>
+
+    <div class="body_wrapper" style="display: none;">
+       
+        {{>navbar}}
+        {{{body}}}
+        
+        {{>footer}}
+    </div>
+    <p style="font-size:10px;text-align:center;color:#777;">Version : {{>version}}</p>
+    
+    <script data-src="/js/package.js?v={{fileMTime '/js/package.js'}}"></script>
+    
+    <script type="text/javascript">
+        (()=>{
+            window.onload = (e)=>{         
+                var jss=document.querySelectorAll("[data-src]");
+                var css=document.querySelectorAll("[data-href]");
+                for(let i=0;i<css.length;i++){
+                    css[i].setAttribute("href",css[i].getAttribute("data-href"))
+                }
+                for(let i=0;i<jss.length;i++){
+                    jss[i].setAttribute("src",jss[i].getAttribute("data-src"))
+                }
+                var jssp=document.querySelectorAll("[data-post-src]");
+                for(let i=0;i<jssp.length;i++){
+                    jssp[i].setAttribute("src",jssp[i].getAttribute("data-post-src"))
+                }
+                document.querySelectorAll("#preloader")[0].style.display="none";
+                document.querySelectorAll(".body_wrapper")[0].style.display="block";
+            }
+        })();
+    </script> 
+
+  </body>
+</html>
